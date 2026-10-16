@@ -7,7 +7,7 @@ const arquivos = {
   "/testes.html": { arquivo: "testes.html", tipo: "text/html; charset=utf-8" },
   "/index.js": { arquivo: "index.js", tipo: "text/javascript; charset=utf-8" },
   "/testes.js": { arquivo: "testes.js", tipo: "text/javascript; charset=utf-8" },
-  "/img/logobc.jpeg": { arquivo: "img/logobc.jpeg", tipo: "image/jpeg" }
+  "/img/headset-barracred.png": { arquivo: "img/headset-barracred.png", tipo: "image/png" }
 };
 
 const servidor = http.createServer((requisicao, resposta) => {

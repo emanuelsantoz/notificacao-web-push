@@ -75,7 +75,7 @@ botaoSimular.addEventListener("click", async () => {
       tag: "Jornada do Cooperado",
       renotify: true,
       data: { url: location.href },
-      icon: "./img/logobc.jpeg"
+      icon: "./img/headset-barracred.png"
     });
     mostrarStatus("Notificação de teste enviada.", "sucesso");
   } catch (erro) {

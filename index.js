@@ -70,11 +70,12 @@ botaoAtivar.addEventListener("click", async () => {
 botaoSimular.addEventListener("click", async () => {
   try {
     const registration = await registrarServiceWorker();
-    await registration.showNotification("Nova solicitação", {
-      body: "João Silva enviou uma nova solicitação.",
-      tag: "nova-solicitacao-teste",
+    await registration.showNotification("NOVO CHAMADO!", {
+      body: "Você recebeu uma nova solicitação DA Jornada do Cooperado da consultoria.",
+      tag: "Jornada do Cooperado",
       renotify: true,
-      data: { url: location.href }
+      data: { url: location.href },
+      icon: "./img/logobc.jpeg"
     });
     mostrarStatus("Notificação de teste enviada.", "sucesso");
   } catch (erro) {

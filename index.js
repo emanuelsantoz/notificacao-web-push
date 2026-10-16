@@ -3,6 +3,49 @@ const botaoSimular = document.querySelector("#simular-notificacao");
 const status = document.querySelector("#status");
 
 let serviceWorkerRegistration;
+let contextoAudio;
+
+async function tocarSininho() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContext) {
+    return;
+  }
+
+  try {
+    contextoAudio ??= new AudioContext();
+
+    if (contextoAudio.state === "suspended") {
+      await contextoAudio.resume();
+    }
+
+    const inicio = contextoAudio.currentTime;
+    const notas = [
+      { frequencia: 1318.51, atraso: 0, duracao: 0.55 },
+      { frequencia: 1567.98, atraso: 0.12, duracao: 0.7 }
+    ];
+
+    notas.forEach(({ frequencia, atraso, duracao }) => {
+      const oscilador = contextoAudio.createOscillator();
+      const volume = contextoAudio.createGain();
+      const comeco = inicio + atraso;
+      const fim = comeco + duracao;
+
+      oscilador.type = "sine";
+      oscilador.frequency.setValueAtTime(frequencia, comeco);
+      volume.gain.setValueAtTime(0.0001, comeco);
+      volume.gain.exponentialRampToValueAtTime(0.16, comeco + 0.02);
+      volume.gain.exponentialRampToValueAtTime(0.0001, fim);
+
+      oscilador.connect(volume);
+      volume.connect(contextoAudio.destination);
+      oscilador.start(comeco);
+      oscilador.stop(fim);
+    });
+  } catch (erro) {
+    console.warn("Não foi possível tocar o sininho.", erro);
+  }
+}
 
 function mostrarStatus(mensagem, tipo = "") {
   status.textContent = mensagem;
@@ -69,6 +112,7 @@ botaoAtivar.addEventListener("click", async () => {
 
 botaoSimular.addEventListener("click", async () => {
   try {
+    const sininho = tocarSininho();
     const registration = await registrarServiceWorker();
     await registration.showNotification("NOVO CHAMADO!", {
       body: "Você recebeu uma nova solicitação DA Jornada do Cooperado da consultoria.",
@@ -77,6 +121,7 @@ botaoSimular.addEventListener("click", async () => {
       data: { url: location.href },
       icon: "./img/headset-barracred.png"
     });
+    await sininho;
     mostrarStatus("Notificação de teste enviada.", "sucesso");
   } catch (erro) {
     console.error(erro);
